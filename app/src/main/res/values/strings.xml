@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">ApplicationB</string>
+    <string name="url_extra">url_extra</string>
+    <string name="ok">Ok</string>
+    <string name="error_happened_while_loading_image">Error happened while loading image</string>
+    <string name="loading">Loading...</string>
+    <string name="receiver_action">com.broadcast.action</string>
+    <string name="last_opened_extra">last_opened_extra</string>
+    <string name="status_extra">status_extra</string>
+</resources>
