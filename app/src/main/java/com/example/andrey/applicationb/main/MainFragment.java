@@ -76,12 +76,10 @@ public class MainFragment extends Fragment implements MainContract.View {
 
         if (getArguments() != null) {
             String imageUrl = getArguments().getString(getString(R.string.url_extra), "");
-            if (!TextUtils.isEmpty(imageUrl))
-            {
+            if (!TextUtils.isEmpty(imageUrl)) {
                 int statusExternal = getArguments().getInt(getString(R.string.status_extra));
                 loadImageToImageView(imageUrl, statusExternal);
-            }
-            else {
+            } else {
                 Log.d(TAG, "application should be closed");
                 progressBar.setVisibility(View.INVISIBLE);
                 AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
@@ -93,13 +91,12 @@ public class MainFragment extends Fragment implements MainContract.View {
                 new CountDownTimer(10000, 1000) {
                     @Override
                     public void onTick(long millisUntilFinished) {
-                        alertDialog.setMessage(getString(R.string.It_will_be_closed_after) + " " + (millisUntilFinished/1000) + " seconds");
+                        alertDialog.setMessage(getString(R.string.It_will_be_closed_after) + " " + (millisUntilFinished / 1000) + " seconds");
                     }
 
                     @Override
                     public void onFinish() {
-                       // android.os.Process.killProcess(android.os.Process.myPid());
-                   System.exit(0);
+                        System.exit(0);
                     }
                 }.start();
             }
@@ -109,7 +106,7 @@ public class MainFragment extends Fragment implements MainContract.View {
     private void deleteReferenceFromAppA(String imageUrl) {
         Intent intent = new Intent(getString(R.string.receiver_action_delete));
         intent.putExtra(getString(R.string.url_extra), imageUrl);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(),1,
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 1,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
         try {
             pendingIntent.send();
@@ -126,20 +123,12 @@ public class MainFragment extends Fragment implements MainContract.View {
         super.onDestroy();
     }
 
-    @Override//this method is not using now because activity creates each time
-    public void updateImage(String url) {
-        if (!TextUtils.isEmpty(url))
-            loadImageToImageView(url, -1);
-        else
-            Log.d(TAG, "do nothing");
-    }
-
-    public void saveToDatabaseOfAppA(String imageUrl, int status){
+    public void saveToDatabaseOfAppA(String imageUrl, int status) {
         Intent intent = new Intent(getString(R.string.receiver_action));
         intent.putExtra(getString(R.string.url_extra), imageUrl);
         intent.putExtra(getString(R.string.status_extra), status);
         intent.putExtra(getString(R.string.last_opened_extra), Calendar.getInstance().getTime().getTime());
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(),1,
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 1,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
         try {
             pendingIntent.send();
@@ -149,7 +138,7 @@ public class MainFragment extends Fragment implements MainContract.View {
         }
     }
 
-    public void saveToExternalstorage(String imageUrl){
+    public void saveToExternalstorage(String imageUrl) {
         rxPermissions
                 .request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .subscribe(granted -> {
@@ -169,8 +158,7 @@ public class MainFragment extends Fragment implements MainContract.View {
                 Log.d(TAG, "onSuccess");
                 progressBar.setVisibility(View.INVISIBLE);
                 saveToDatabaseOfAppA(imageUrl, 1);
-                if(statusExternalHistory == 1)
-                {
+                if (statusExternalHistory == 1) {
                     deleteReferenceFromAppA(imageUrl);
                     saveToExternalstorage(imageUrl);
                 }

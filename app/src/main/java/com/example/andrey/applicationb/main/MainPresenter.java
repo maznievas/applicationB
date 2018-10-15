@@ -35,17 +35,13 @@ public class MainPresenter implements MainContract.Presenter {
     @Override
     public void saveToExternalStorage(Bitmap bitmap, String fname) {
         Flowable.just(Environment.getExternalStorageDirectory().toString())
-                .map(root -> {
-                    return new File(root + Const.IMAGE_PATH);
-                })
+                .map(root -> new File(root + Const.IMAGE_PATH))
                 .map(destDir -> {
                     if (!destDir.exists())
                         destDir.mkdirs();
                     return destDir;
                 })
-                .map(destDir -> {
-                    return new File(destDir, fname);
-                })
+                .map(destDir -> new File(destDir, fname))
                 .map(file -> {
                     if (file.exists())
                         file.delete();
@@ -68,25 +64,6 @@ public class MainPresenter implements MainContract.Presenter {
                     Log.e(TAG, "File saving exception");
                     throwable.printStackTrace();
                 });
-
-//        String root = Environment.getExternalStorageDirectory().toString();
-//        File myDir = new File(root + "/BIGDIG/test/B");
-//        if (!myDir.exists()) {
-//            boolean mkdirsResult = myDir.mkdirs();
-//            Log.d(TAG, "directory created: " + mkdirsResult);
-//        }
-//        File file = new File(myDir, fname);
-//        if (file.exists())
-//            file.delete();
-//        try {
-//            FileOutputStream out = new FileOutputStream(file);
-//            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
-//            out.flush();
-//            out.close();
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
     }
 
     @Override

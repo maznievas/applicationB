@@ -39,11 +39,4 @@ public class MainActivity extends AppCompatActivity {
 
         mainPresenter = new MainPresenter(mainFragment);
     }
-
-    @Override
-    protected void onRestart() {
-        Log.d(TAG, "onRestart");
-      //  mainFragment.updateImage(getIntent().getStringExtra(getString(R.string.url_extra)));
-        super.onRestart();
-    }
 }

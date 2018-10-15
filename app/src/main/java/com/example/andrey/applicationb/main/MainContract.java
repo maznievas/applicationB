@@ -6,7 +6,6 @@ public interface MainContract {
 
     interface View{
         void setPresenter(MainContract.Presenter presenter);
-        void updateImage(String url);
         void showMessage(int resourceId);
         void showLoadingState(boolean flag);
     }
