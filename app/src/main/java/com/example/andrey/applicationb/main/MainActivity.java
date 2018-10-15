@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
             if (getIntent() != null) {
                 Bundle bundle = new Bundle();
                 bundle.putString(getString(R.string.url_extra), getIntent().getStringExtra(getString(R.string.url_extra)));
+                bundle.putInt(getString(R.string.status_extra), getIntent().getIntExtra(getString(R.string.status_extra), -1));
                 mainFragment.setArguments(bundle);
                 Log.d(TAG, "url: " + getIntent().getStringExtra(getString(R.string.url_extra)));
                 getIntent().removeExtra(getString(R.string.url_extra));

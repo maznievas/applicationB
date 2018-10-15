@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -77,12 +78,44 @@ public class MainFragment extends Fragment implements MainContract.View {
             String imageUrl = getArguments().getString(getString(R.string.url_extra), "");
             if (!TextUtils.isEmpty(imageUrl))
             {
-                loadImageToImageView(imageUrl);
+                int statusExternal = getArguments().getInt(getString(R.string.status_extra));
+                loadImageToImageView(imageUrl, statusExternal);
             }
             else {
                 Log.d(TAG, "application should be closed");
                 progressBar.setVisibility(View.INVISIBLE);
+                AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+                alertDialog.setTitle(getString(R.string.this_applications_is_not_independent));
+                alertDialog.setMessage(getString(R.string.It_will_be_closed_after) + " 10 seconds");
+                alertDialog.setCancelable(false);
+                alertDialog.show();   //
+
+                new CountDownTimer(10000, 1000) {
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+                        alertDialog.setMessage(getString(R.string.It_will_be_closed_after) + " " + (millisUntilFinished/1000) + " seconds");
+                    }
+
+                    @Override
+                    public void onFinish() {
+                       // android.os.Process.killProcess(android.os.Process.myPid());
+                   System.exit(0);
+                    }
+                }.start();
             }
+        }
+    }
+
+    private void deleteReferenceFromAppA(String imageUrl) {
+        Intent intent = new Intent(getString(R.string.receiver_action_delete));
+        intent.putExtra(getString(R.string.url_extra), imageUrl);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(),1,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        try {
+            pendingIntent.send();
+        } catch (PendingIntent.CanceledException e) {
+            Log.e(TAG, "Error while sending intent for deleting");
+            e.printStackTrace();
         }
     }
 
@@ -96,7 +129,7 @@ public class MainFragment extends Fragment implements MainContract.View {
     @Override//this method is not using now because activity creates each time
     public void updateImage(String url) {
         if (!TextUtils.isEmpty(url))
-            loadImageToImageView(url);
+            loadImageToImageView(url, -1);
         else
             Log.d(TAG, "do nothing");
     }
@@ -129,14 +162,18 @@ public class MainFragment extends Fragment implements MainContract.View {
                 });
     }
 
-    public void loadImageToImageView(String imageUrl) {
+    public void loadImageToImageView(String imageUrl, int statusExternalHistory) {
         Picasso.get().load(imageUrl).into(imageView, new Callback() {
             @Override
             public void onSuccess() {
                 Log.d(TAG, "onSuccess");
                 progressBar.setVisibility(View.INVISIBLE);
                 saveToDatabaseOfAppA(imageUrl, 1);
-               // saveToExternalstorage(imageUrl); //todo use in another case
+                if(statusExternalHistory == 1)
+                {
+                    deleteReferenceFromAppA(imageUrl);
+                    saveToExternalstorage(imageUrl);
+                }
             }
 
             @Override

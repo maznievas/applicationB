@@ -5,6 +5,9 @@
     <string name="error_happened_while_loading_image">Error happened while loading image</string>
     <string name="loading">Loading...</string>
     <string name="receiver_action">com.broadcast.action</string>
+    <string name="receiver_action_delete">com.broadcast.action.delete</string>
     <string name="last_opened_extra">last_opened_extra</string>
     <string name="status_extra">status_extra</string>
+    <string name="this_applications_is_not_independent">This application is not independent</string>
+    <string name="It_will_be_closed_after">It will be closed after</string>
 </resources>
